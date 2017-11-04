@@ -1,0 +1,49 @@
+html
+  head
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+    link(type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" rel="stylesheet" media="screen,projection")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title direct HTTP agent
+  body
+    div(class="container")
+      h1(class="header center-align teal-text") direct API status
+      div(class="row center-align")
+        h5(class="header col s12 light") UNOFFICIAL: Visualize direct API status
+      div(class="row center-align")
+        div(class="col s12 m4 l2")
+        div(class="col s12 m4 l8")
+          if status.service == 0
+            div(class="card-panel teal")
+              span(class="white-text") Service is operating normally.
+          else
+            div(class="card-panel red darken-1")
+              span(class="white-text") Service responses are degrading.
+        div(class="col s12 m4 l2")
+      div(class="row center-align")
+        canvas(id="chart")
+    script(type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js")
+    script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js")
+    script(type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js")
+    script(type="text/javascript").
+      const drawChart = (id, data) => {
+        ctx = document.getElementById(id).getContext("2d");
+        const labels = data.map(_ => "");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [{
+              label: "send - receive message (msec)",
+              data,
+              fill: false,
+              backgroundColor: "rgb(75, 192, 192)",
+              borderColor: "rgb(75, 192, 192)",
+              lineTension: 0.0
+            }]
+          },
+          options: {}
+        });
+      };
+      $(function() {
+        $.getJSON("/stats").then(stats => { drawChart("chart", stats.sendReceive); });
+      });
