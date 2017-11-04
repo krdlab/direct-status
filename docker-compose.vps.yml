@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  status:
+    environment:
+      NODE_ENV: production
+    volumes:
+      - "/var/lib/direct-status/db:/data/db"
+      - "/var/lib/direct-status/storage.local:/data/storage.local"

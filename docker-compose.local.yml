@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  status:
+    volumes:
+      - "./data/db:/data/db"
+      - "./data/storage.local:/data/storage.local"
