@@ -3,5 +3,6 @@ version: '3'
 services:
   status:
     volumes:
+      - "./etc/status:/etc/status"
       - "./data/db:/data/db"
       - "./data/storage.local:/data/storage.local"

@@ -2,3 +2,4 @@
 data
 dest
 node_modules
+.env

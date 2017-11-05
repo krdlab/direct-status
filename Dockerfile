@@ -6,15 +6,15 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /
 RUN gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 && gpg --verify /tini.asc
 RUN chmod +x /tini
 
-RUN mkdir -p /data/db /data/storage.local
+RUN mkdir -p /etc/status /data/db /data/storage.local
 WORKDIR /work
 
 COPY package-lock.json .
 COPY package.json .
 
 RUN npm install
-# RUN sed -i -e "s/,this\.getOSString()//" node_modules/direct-js/lib/direct-node.min.js
-# RUN sed -i -e "s/else a()},j()}},getDomains/},a()}},getDomains/" node_modules/direct-js/lib/direct-node.min.js
+RUN sed -i -e "s/,this\.getOSString()//" node_modules/direct-js/lib/direct-node.min.js
+RUN sed -i -e "s/else a()},j()}},getDomains/},a()}},getDomains/" node_modules/direct-js/lib/direct-node.min.js
 
 COPY . .
 
