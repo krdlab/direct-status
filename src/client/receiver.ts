@@ -1,4 +1,7 @@
 import { create } from "./direct";
+import { connection } from "../db";
+import { Check } from "../entity/Check";
+import { Receive } from "../entity/Receive";
 
 export class Receiver {
   api: any;
@@ -29,7 +32,20 @@ export class Receiver {
     const id = m[1];
     const begin = new Date(m[2]);
     const end = new Date();
-    console.log(`TODO receiver: id = ${id}, time = ${end.getTime() - begin.getTime()}`);
+    this._proc(id, begin, end);
+  }
+
+  private _proc(id: string, begin: Date, end: Date) {
+    connection
+      .then(async conn => {
+        const check = await conn.getRepository(Check).findOneById(id);
+        if (!check) {
+          throw `Check entity not found: id = ${id}`
+        }
+        const r = new Receive(check, end);
+        await conn.manager.save(r);
+      })
+      .catch(console.error);
   }
 
   start(): void {

@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import * as express from "express";
 import * as helmet from "helmet";
 import * as bodyParser from "body-parser";
@@ -26,9 +27,9 @@ app.get("/", (req, res) => {
   res.render("index", { status });
 });
 
-app.get("/stats", (req, res) => {
-  const count = Number(req.query.count);
-  const stats = observer.getServiceStats(count);
+app.get("/stats", async (req, res) => {
+  const count = Number(req.query.count || 100);
+  const stats = await observer.getServiceStats(count);
   res.send(stats);
 });
 

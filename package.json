@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Show direct API status",
-  "main": "index.js",
+  "main": "dest/index.js",
   "scripts": {
     "build": "rm -r dest; tsc",
     "tsc": "tsc"
@@ -26,6 +26,9 @@
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "helmet": "^3.9.0",
-    "pug": "^2.0.0-rc.4"
+    "pug": "^2.0.0-rc.4",
+    "reflect-metadata": "^0.1.10",
+    "sqlite3": "^3.1.13",
+    "typeorm": "^0.1.2"
   }
 }

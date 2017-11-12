@@ -1,10 +1,7 @@
 import { create } from "./direct";
-
-// TODO: DB
-let __id = 0;
-function next(): number {
-  return ++__id;
-}
+import { connection } from "../db";
+import { Check } from "../entity/Check";
+import { Send } from "../entity/Send";
 
 // TODO: configuration
 const SEND_INTERVAL = 60; // sec
@@ -42,13 +39,18 @@ export class Sender {
 
   private send() {
     const room = this._decimalStrToHLStr(this.targetTalkId);
-    const begin = new Date();
-    const id = next();
-    this.api.send({room}, `$check: ${id}, ${begin.toISOString()}`);
-    //  onread: () => {
-    //    console.log(`TODO sender: id = ${id}, time = ${new Date().getTime() - begin.getTime()}`);
-    //  }
+    connection
+      .then(async conn => {
+        const c = new Check(new Date());
+        await conn.manager.save(c);
+        const s = new Send(c, new Date());
+        this.api.send({room}, `$check: ${s.id}, ${s.timestamp.toISOString()}`);
+        await conn.manager.save(s);
+      })
+      .catch(console.error);
   }
+
+  // TODO: send, receive にそれぞれ時刻を記録しておけば，select (r.timestamp - s.timestamp) time from check c join send s on s.id = c.id join receive r on r.id = c.id で良くなる
 
   stop(): void {
     // TODO

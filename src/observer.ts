@@ -1,6 +1,11 @@
 import * as cluster from "cluster";
 import { Worker } from "cluster";
 import { SenderProxy, ReceiverProxy, WORKER_SCRIPT } from "./client-proxy";
+import { connection } from "./db";
+import { getConnection } from "typeorm";
+import { Check } from "./entity/Check";
+import { Send } from "./entity/Send";
+import { Receive } from "./entity/Receive";
 
 cluster.setupMaster({ exec: WORKER_SCRIPT });
 
@@ -42,9 +47,18 @@ export class DirectObserver {
     return { service: ServiceStatus.Normally }; // TODO
   }
 
-  getServiceStats(count: number): any { // TODO
+  async getServiceStats(count: number): Promise<any> { // TODO
+    const conn = await connection;
+    const times = await conn.createQueryBuilder()
+      .select("(strftime('%f', r.timestamp) - strftime('%f', s.timestamp)) * 1000", "time")
+      .from(Check, "c")
+      .innerJoin(Receive, "r", "r.id = c.id")
+      .innerJoin(Send, "s", "s.id = c.id")
+      .orderBy("c.id", "DESC")
+      .limit(count)
+      .getRawMany();
     const stats = {
-      sendReceive: [500, 400, 800, 1000, 200, 300, 450]
+      sendReceive: times.map(t => t.time).reverse()
     };
     return stats;
   }
