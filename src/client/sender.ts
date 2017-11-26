@@ -50,10 +50,7 @@ export class Sender {
       .catch(console.error);
   }
 
-  // TODO: send, receive にそれぞれ時刻を記録しておけば，select (r.timestamp - s.timestamp) time from check c join send s on s.id = c.id join receive r on r.id = c.id で良くなる
-
   stop(): void {
     // TODO
   }
 }
-

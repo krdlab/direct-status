@@ -21,15 +21,15 @@ abstract class DirectClientProxy {
   }
 
   private _handleMessage(msg: any): void {
-    this.response.emit(msg.method, msg);
+    this.response.emit(msg.method, msg); // FIXME
   }
 
   protected abstract get role(): t.Role;
 
   protected asyncCall(req: t.IpcMessage): Promise<string> {
     return new Promise((resolve, _) => {
-      this.worker.send(req);
-      this.response.once(req.method, (res) => {
+      this.worker.send(req); // FIXME
+      this.response.once(req.method, (res) => { // FIXME
         resolve(res.result);
       });
     });

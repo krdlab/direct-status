@@ -13,8 +13,6 @@ if (!options.validate()) {
   process.exit(1);
 }
 
-// TODO: prepare SQLite
-
 const observer = new DirectObserver(options);
 
 const app = express();
