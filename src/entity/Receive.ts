@@ -4,6 +4,7 @@ import { Check } from "./Check";
 @Entity()
 export class Receive {
 
+  // FIXME: @OneToOne(type => Check, check => check.id)
   @PrimaryColumn({ type: "integer" })
   id: string;
 
